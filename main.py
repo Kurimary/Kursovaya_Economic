@@ -1,6 +1,36 @@
 from openpyxl import load_workbook
 wb_val = load_workbook(filename='ExcelDocument.xlsx', data_only=True)
 sheet_val = wb_val['Общая информация']
+def Operation_capital():
+    S_and_M_Per_Year = []
+    NZP = []
+    ZGP = []
+    DZ = []
+    KZ = []
+    Diffe_value= [[]]
+    Summ=[]
+    Obyom_proizv.append(0)
+    Vyruchka_po_godam.append(0)
+    for i in range(6):
+        S_and_M_Per_Year.append((Max_production*1000*Obyom_proizv[i]*S_and_M)/Number_of_part[0])
+        NZP.append(Max_production*1000*Obyom_proizv[i]*Sebe_stoim/Number_of_part[1])
+        ZGP.append(Max_production*1000*Obyom_proizv[i]*Sebe_stoim/Number_of_part[2])
+        DZ.append(Vyruchka_po_godam[i]/Number_of_part[3])
+        KZ.append(Max_production*1000*Obyom_proizv[i]*S_and_M/Number_of_part[4])
+    Summ.append(S_and_M_Per_Year[0]+NZP[0]+ZGP[0]+DZ[0]+KZ[0])
+   # for i in range(5):
+    #    for j in range(5):
+     #       if i == 0 :
+      #          Diffe_value[i][j] = S_and_M_Per_Year[i+1] - S_and_M_Per_Year[i]
+       #     if i == 1:
+        #        Diffe_value[i][j] = NZP[i+1] - NZP[i]
+         #   if i == 2:
+          #      Diffe_value[i][j] = ZGP[i+1] - ZGP[i]
+           # if i == 3:
+            #    Diffe_value[i][j] = DZ[i+1] = DZ[i]
+            #if i == 4:
+             #   Diffe_value[i][j] = KZ[i+1] - KZ[i]
+
 # Общая информация
 Stoimost_oborud = sheet_val['B2'].value
 Srok_pol_ispolz = sheet_val['B3'].value
@@ -55,3 +85,4 @@ for i in range (5):
     Vyruchka_po_godam_min_nalog.append(Vyruchka_po_godam[i]*(1-Nalogovaya_nagruzka))
     Valovaya_pribyl.append(Vyruchka_po_godam_min_nalog[i]-(Max_production*Obyom_proizv[i]*(Cost_per_unit-Sebe_stoim))-Amortization)
     Pribyl_ot_prodazh.append(Valovaya_pribyl[i]-Summa_rasxodov)
+Operation_capital()
