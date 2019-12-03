@@ -7,29 +7,34 @@ def Operation_capital():
     ZGP = []
     DZ = []
     KZ = []
-    Diffe_value= [[]]
+    Diffe_value= []
     Summ=[]
-    Obyom_proizv.append(0)
-    Vyruchka_po_godam.append(0)
-    for i in range(6):
+    for i in range(5): #Заполнение массива с расчетами
         S_and_M_Per_Year.append((Max_production*1000*Obyom_proizv[i]*S_and_M)/Number_of_part[0])
         NZP.append(Max_production*1000*Obyom_proizv[i]*Sebe_stoim/Number_of_part[1])
         ZGP.append(Max_production*1000*Obyom_proizv[i]*Sebe_stoim/Number_of_part[2])
         DZ.append(Vyruchka_po_godam[i]/Number_of_part[3])
         KZ.append(Max_production*1000*Obyom_proizv[i]*S_and_M/Number_of_part[4])
-    Summ.append(S_and_M_Per_Year[0]+NZP[0]+ZGP[0]+DZ[0]+KZ[0])
-   # for i in range(5):
-    #    for j in range(5):
-     #       if i == 0 :
-      #          Diffe_value[i][j] = S_and_M_Per_Year[i+1] - S_and_M_Per_Year[i]
-       #     if i == 1:
-        #        Diffe_value[i][j] = NZP[i+1] - NZP[i]
-         #   if i == 2:
-          #      Diffe_value[i][j] = ZGP[i+1] - ZGP[i]
-           # if i == 3:
-            #    Diffe_value[i][j] = DZ[i+1] = DZ[i]
-            #if i == 4:
-             #   Diffe_value[i][j] = KZ[i+1] - KZ[i]
+    S_and_M_Per_Year.append(0)#Ввод последней строки с нулевыми значениями
+    NZP.append(0)
+    ZGP.append(0)
+    DZ.append(0)
+    KZ.append(0)
+    for k in range(5):#Двумернй массив разности параметров
+        Diffe_value.append([])
+        for j in range(5):
+            if j == 0:
+                Diffe_value[k].append(S_and_M_Per_Year[k+1] - S_and_M_Per_Year[k])
+            if j == 1:
+                Diffe_value[k].append(NZP[k+1] - NZP[k])
+            if j == 2:
+                Diffe_value[k].append(ZGP[k+1] - ZGP[k])
+            if j == 3:
+                Diffe_value[k].append(DZ[k+1] - DZ[k])
+            if j == 4:
+                Diffe_value[k].append(KZ[k+1] - KZ[k])
+    for k in range(5):
+        Summ.append(Diffe_value[k][0]+Diffe_value[k][1]+Diffe_value[k][2]+Diffe_value[k][3]-Diffe_value[k][4])  
 
 # Общая информация
 Stoimost_oborud = sheet_val['B2'].value
