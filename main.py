@@ -1,6 +1,18 @@
 from openpyxl import load_workbook
 wb_val = load_workbook(filename='ExcelDocument.xlsx', data_only=True)
 sheet_val = wb_val['Общая информация']
+def Revenue_all_type():
+    Revenue_wo = []  # Выручка
+    Revenue_wt = []  # Выручка минус налог
+    Gross_profit = []  # Валовая прибыль
+    Revenue_for_sales = []  # Прибыль от продаж
+    for i in range(5):
+        Revenue_wo.append(Max_production * Obyom_proizv[i] * Cost_per_unit)
+        Revenue_wt.append(Revenue_wo[i] * (1 - Nalogovaya_nagruzka))
+        Gross_profit.append(Revenue_wt - (Max_production * Obyom_proizv[i] * (Cost_per_unit - Sebe_stoim)))
+        Revenue_for_sales.append(Gross_profit[i] - (Komm_rasx + Uprav_rasx))
+def Credit():
+    
 def Operation_capital():
     S_and_M_Per_Year = []
     NZP = []
@@ -20,6 +32,7 @@ def Operation_capital():
     ZGP.append(0)
     DZ.append(0)
     KZ.append(0)
+    print(KZ)
     for k in range(5):#Двумернй массив разности параметров
         Diffe_value.append([])
         for j in range(5):
@@ -34,9 +47,9 @@ def Operation_capital():
             if j == 4:
                 Diffe_value[k].append(KZ[k+1] - KZ[k])
     for k in range(5):
-        Summ.append(Diffe_value[k][0]+Diffe_value[k][1]+Diffe_value[k][2]+Diffe_value[k][3]-Diffe_value[k][4])  
+        Summ.append(Diffe_value[k][0]+Diffe_value[k][1]+Diffe_value[k][2]+Diffe_value[k][3]-Diffe_value[k][4])
 
-# Общая информация
+        # Общая информация
 Stoimost_oborud = sheet_val['B2'].value
 Srok_pol_ispolz = sheet_val['B3'].value
 Max_production = sheet_val['B4'].value
