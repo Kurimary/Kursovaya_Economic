@@ -6,13 +6,26 @@ def Revenue_all_type():
     Revenue_wt = []  # Выручка минус налог
     Gross_profit = []  # Валовая прибыль
     Revenue_for_sales = []  # Прибыль от продаж
+    Pure_profit =[]
     for i in range(5):
         Revenue_wo.append(Max_production * Obyom_proizv[i] * Cost_per_unit)
         Revenue_wt.append(Revenue_wo[i] * (1 - Nalogovaya_nagruzka))
-        Gross_profit.append(Revenue_wt - (Max_production * Obyom_proizv[i] * (Cost_per_unit - Sebe_stoim)))
+        Gross_profit.append(Revenue_wt[i] - (Max_production * Obyom_proizv[i] * (Cost_per_unit - Sebe_stoim)))
         Revenue_for_sales.append(Gross_profit[i] - (Komm_rasx + Uprav_rasx))
+        #Pure_profit.append()
+
 def Credit():
-    
+    Dolg = []
+    Payment = []
+    Balance = []
+    Percent = []
+    Ostatok = []
+    Credit_first_point = Stoimost_oborud - Akzion_finan_of_project
+    Dolg.append(Credit_first_point+Operation_capital()[0]*(1+Stavka_po_kreditu))
+    Percent.append((Credit_first_point+Operation_capital()[0])*Stavka_po_kreditu)
+    Payment.append((Credit_first_point+Operation_capital()[0])*Pogashenie_dolg_kred[0])
+    Ostatok.append(Dolg[0]-Payment[0])
+    Ostatok.append((Credit_first_point*Operation_capital()[0])*Pogashenie_dolg_kred)
 def Operation_capital():
     S_and_M_Per_Year = []
     NZP = []
@@ -48,6 +61,7 @@ def Operation_capital():
                 Diffe_value[k].append(KZ[k+1] - KZ[k])
     for k in range(5):
         Summ.append(Diffe_value[k][0]+Diffe_value[k][1]+Diffe_value[k][2]+Diffe_value[k][3]-Diffe_value[k][4])
+    return(Summ)
 
         # Общая информация
 Stoimost_oborud = sheet_val['B2'].value
@@ -77,8 +91,6 @@ Komm_rasx = sheet_val['B24'].value
 Uprav_rasx = sheet_val['B25'].value
 Summa_rasxodov = (Komm_rasx+Uprav_rasx)*1000
 
-
-
 #Период оборота (в днях)
 S_and_M_zapasy = sheet_val['B27'].value
 Nezav_proizv=sheet_val['B28'].value
@@ -86,8 +98,6 @@ Zapasi_got_prod = sheet_val['B29'].value
 Debet = sheet_val['B30'].value
 Kredit = sheet_val['B31'].value
 Day_per_year=sheet_val['B32'].value
-
-
 
 #Подсчет количества оборотов в год
 Number_of_part = []
@@ -104,3 +114,5 @@ for i in range (5):
     Valovaya_pribyl.append(Vyruchka_po_godam_min_nalog[i]-(Max_production*Obyom_proizv[i]*(Cost_per_unit-Sebe_stoim))-Amortization)
     Pribyl_ot_prodazh.append(Valovaya_pribyl[i]-Summa_rasxodov)
 Operation_capital()
+Revenue_all_type()
+Credit()
