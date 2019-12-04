@@ -20,12 +20,18 @@ def Credit():
     Balance = []
     Percent = []
     Ostatok = []
+    Op_def = (Operation_capital()[5])
     Credit_first_point = Stoimost_oborud - Akzion_finan_of_project
-    Dolg.append(Credit_first_point+Operation_capital()[0]*(1+Stavka_po_kreditu))
-    Percent.append((Credit_first_point+Operation_capital()[0])*Stavka_po_kreditu)
-    Payment.append((Credit_first_point+Operation_capital()[0])*Pogashenie_dolg_kred[0])
+    Dolg.append(Credit_first_point+Op_def*(1+Stavka_po_kreditu))
+    Percent.append((Credit_first_point+Op_def)*Stavka_po_kreditu)
+    Payment.append((Credit_first_point+Op_def)*Pogashenie_dolg_kred[0]+Percent[0])
     Ostatok.append(Dolg[0]-Payment[0])
-    Ostatok.append((Credit_first_point*Operation_capital()[0])*Pogashenie_dolg_kred)
+    Ostatok.append((Credit_first_point*Op_def)*Pogashenie_dolg_kred[0])
+    Percent.append(Ostatok[0]*Stavka_po_kreditu)
+    Payment.append((Credit_first_point+Op_def)*Pogashenie_dolg_kred[1]+Percent[1])
+    print(Payment[1],Credit_first_point,Op_def,Pogashenie_dolg_kred[0],Percent[0])
+
+
 def Operation_capital():
     S_and_M_Per_Year = []
     NZP = []
@@ -45,7 +51,6 @@ def Operation_capital():
     ZGP.append(0)
     DZ.append(0)
     KZ.append(0)
-    print(KZ)
     for k in range(5):#Двумернй массив разности параметров
         Diffe_value.append([])
         for j in range(5):
@@ -61,13 +66,15 @@ def Operation_capital():
                 Diffe_value[k].append(KZ[k+1] - KZ[k])
     for k in range(5):
         Summ.append(Diffe_value[k][0]+Diffe_value[k][1]+Diffe_value[k][2]+Diffe_value[k][3]-Diffe_value[k][4])
+    Summ.append(S_and_M_Per_Year[0]+NZP[0]+ZGP[0]+DZ[0]+KZ[0])
+    print(Summ[5])
     return(Summ)
 
         # Общая информация
-Stoimost_oborud = sheet_val['B2'].value
+Stoimost_oborud = (sheet_val['B2'].value)*1000000
 Srok_pol_ispolz = sheet_val['B3'].value
 Max_production = sheet_val['B4'].value
-Akzion_finan_of_project = sheet_val['B5'].value
+Akzion_finan_of_project = (sheet_val['B5'].value)*1000000
 Trebue_doxodn = sheet_val['B6'].value
 Stavka_po_kreditu = sheet_val['B7'].value
 Stavka_po_nalogu = sheet_val['B8'].value
