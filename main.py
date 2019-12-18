@@ -1,6 +1,64 @@
 from openpyxl import load_workbook
+from openpyxl import Workbook
+wb_w = Workbook()
+dest_filename = 'Result.xlsx'
+ws1 = wb_w.create_sheet(title='Results')
 wb_val = load_workbook(filename='ExcelDocument.xlsx', data_only=True)
 sheet_val = wb_val['Общая информация']
+Percent = []
+Pure_profit = []
+def Finish_step():
+    Pay_disc = Revenue_all_type()
+    Summ_not_main  = Operation_capital()[5]/1000
+    L_twenty = (Summ_not_main+20*(10**6))*(-1)
+    NPV = 0
+    for i in range (len(Pay_disc)):
+        NPV+=Pay_disc[i]
+    NPV+=L_twenty
+    IRR = sheet_val['M32'].value
+    PI = NPV/(-1*L_twenty)
+    PBP = []
+    DPBP = []
+    counter_pure = L_twenty
+    counter_disc = L_twenty
+    PBP_b = False
+    Ages_PBP = 0
+    DPBP_b = False
+    Ages_DPBP = 0
+    for i in range(5):
+        counter_pure = counter_pure+Pure_profit[i]
+        counter_disc = counter_disc+Pay_disc[i]
+        PBP.append(counter_pure)
+        DPBP.append(counter_disc)
+        if PBP[i]>0 and PBP_b == False:
+            print('Need ',i+1,' ','age(PBP)')
+            PBP_b = True
+            Ages_PBP = i+1
+        if DPBP[i] > 0 and DPBP_b == False:
+            print('Need ', i, ' ', 'age(DPBP)')
+            DPBP_b = True
+            Ages_DPBP = i
+
+    print('IRR=', IRR, ' ', 'PI= ', PI)
+    print(PBP)
+    print(DPBP)
+    if (NPV>0 and PI > 1 and IRR>Trebue_doxodn and Ages_PBP<5 and Ages_DPBP<5):
+        ws1['A2'] = 'Инвестиционный проект является выгодным и соотствует всем условиям'
+        ws1['A3'] = 'NPV = '+str(NPV)
+        ws1['C3'] = "IRR = "+str(IRR)
+        ws1['F3'] = 'PI = '+str(PI)
+        ws1['H3'] = 'PBP = ' + str(Ages_PBP)+' '+'лет'
+        ws1['G3'] = 'DBPB = ' + str(Ages_DPBP)+' '+'лет'
+        wb_w.save(filename=dest_filename)
+    else:
+        ws1['A2'] = 'Инвестиционный проект не является выгодным, все параметры приведены ниже'
+        ws1['A3'] = 'NPV = ' + str(NPV)
+        ws1['B3'] = "IRR = " + str(IRR)
+        ws1['C3'] = 'PI = ' + str(PI)
+        ws1['D3'] = 'PBP = ' + str(Ages_PBP) + ' ' + 'лет'
+        ws1['E3'] = 'DBPB = ' + str(Ages_DPBP) + ' ' + 'лет'
+        wb_w.save(filename=dest_filename)
+
 def Revenue_all_type():
     Credit_func = Credit()
     Credit_func.append(0)
@@ -10,21 +68,25 @@ def Revenue_all_type():
     Gross_profit = []  # Валовая прибыль
     Revenue_for_sales = []  # Прибыль от продаж
     Profit_before_tax = []
-    Pure_profit =[]
+    Pure_profit_disc = []
+    Percent.append(0)
+    Percent.append(0)
     for i in range(5):
         Revenue_wo.append(Max_production * Obyom_proizv[i] * Cost_per_unit)
         Revenue_wt.append(Revenue_wo[i] * (1 - Nalogovaya_nagruzka))
         Gross_profit.append(Revenue_wt[i] - (Max_production * Obyom_proizv[i] * (Cost_per_unit - Sebe_stoim))-Amortization)
-        Revenue_for_sales.append(Gross_profit[i] - (Komm_rasx + Uprav_rasx))
+        Revenue_for_sales.append(Gross_profit[i] - (Komm_rasx + Uprav_rasx)-Percent[i])
         Profit_before_tax.append(Revenue_for_sales[i]-Credit_func[i])
+        if i == 4:
+            Profit_before_tax[i]+=2*(10**6)
         Pure_profit.append(Profit_before_tax[i]*(1-Stavka_po_nalogu))
-    print(Pure_profit)
+        Pure_profit_disc.append(Pure_profit[i]/(1+Trebue_doxodn)**(i+1))
+    return Pure_profit_disc
 
 def Credit():
     Dolg = []
     Payment = []
     Balance = []
-    Percent = []
     Ostatok = []
     Op_def = (Operation_capital()[5]/1000)
     Credit_first_point = Stoimost_oborud - Akzion_finan_of_project
@@ -75,7 +137,7 @@ def Operation_capital():
                 Diffe_value[k].append(KZ[k+1] - KZ[k])
     for k in range(5):
         Summ.append(Diffe_value[k][0]+Diffe_value[k][1]+Diffe_value[k][2]+Diffe_value[k][3]-Diffe_value[k][4])
-    Summ.append(S_and_M_Per_Year[0]+NZP[0]+ZGP[0]+DZ[0]+KZ[0])
+    Summ.append(S_and_M_Per_Year[0]+NZP[0]+ZGP[0]+DZ[0]-KZ[0])
     return(Summ)
 
         # Общая информация
@@ -116,7 +178,7 @@ Day_per_year=sheet_val['B32'].value
 
 #Подсчет количества оборотов в год
 Number_of_part = []
-for i in range (5):
+for i in range(5):
     Number_of_part.append(Day_per_year/(sheet_val['B'+str(27+i)].value))
 
 Vyruchka_po_godam = []
@@ -128,6 +190,4 @@ for i in range (5):
     Vyruchka_po_godam_min_nalog.append(Vyruchka_po_godam[i]*(1-Nalogovaya_nagruzka))
     Valovaya_pribyl.append(Vyruchka_po_godam_min_nalog[i]-(Max_production*Obyom_proizv[i]*(Cost_per_unit-Sebe_stoim))-Amortization)
     Pribyl_ot_prodazh.append(Valovaya_pribyl[i]-Summa_rasxodov)
-Operation_capital()
-Revenue_all_type()
-Credit()
+Finish_step()
